@@ -2,9 +2,10 @@
 import fs from "fs/promises";
 import * as path from "path";
 import * as _ from "lodash-es";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 
-const contactsPath = path.join(process.cwd(), "../db/contacts.json");
+const contactsPath = path.resolve("db", "contacts.json");
 
 export async function listContacts() {
   try {
@@ -34,7 +35,7 @@ export async function removeContact(contactId) {
 }
 
 export async function addContact(name, email, phone) {
-  const new_contact = { id: uuidv4(), name: name, email: email, phone: phone };
+  const new_contact = { id: nanoid(), name: name, email: email, phone: phone };
   let data = (await listContacts()) ?? [];
   data.push(new_contact);
   fs.writeFile(contactsPath, JSON.stringify(data), function (err) {
@@ -43,7 +44,7 @@ export async function addContact(name, email, phone) {
   return new_contact;
 }
 
-export async function updateContact(contactId, name, email, phone) {
+export async function changeContact(contactId, name, email, phone) {
   let data = await listContacts();
   const index = data.findIndex((contact) => contact.id === contactId);
   if (index === -1) return null;

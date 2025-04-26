@@ -1,8 +1,14 @@
-import contactsService from "../services/contactsServices.js";
+import {
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+  changeContact,
+} from "../services/contactsServices.js";
 import HttpError from "../helpers/HttpError.js";
 
 export const getAllContacts = async (req, res) => {
-  const contacts = await contactsService.listContacts();
+  const contacts = await listContacts();
   res.json({
     status: "success",
     code: 200,
@@ -14,7 +20,7 @@ export const getAllContacts = async (req, res) => {
 
 export const getOneContact = async (req, res) => {
   const { id } = req.params;
-  const contact = await contactsService.getContactById(id);
+  const contact = await getContactById(id);
   if (contact)
     res.json({
       status: "success",
@@ -28,7 +34,7 @@ export const getOneContact = async (req, res) => {
 
 export const deleteContact = async (req, res) => {
   const { id } = req.params;
-  const contact = await contactsService.removeContact(id);
+  const contact = await removeContact(id);
   if (contact)
     res.json({
       status: "success",
@@ -42,26 +48,21 @@ export const deleteContact = async (req, res) => {
 
 export const createContact = async (req, res) => {
   const { name, email, phone } = req.body;
-  const new_contact = await contactsService.addContact(name, email, phone);
+  const new_contact = await addContact(name, email, phone);
   res.status(201).json(new_contact);
 };
 
 export const updateContact = async (req, res) => {
   const { id } = req.params;
   const { name, email, phone } = req.body;
-  const updated_contact = await contactsService.updateContact(
-    id,
-    name,
-    email,
-    phone
-  );
-  if (updated_contact)
+  const updated_contact = await changeContact(id, name, email, phone);
+  if (updated_contact) {
     res.json({
       status: "success",
       code: 200,
       data: {
-        contact,
+        updated_contact,
       },
     });
-  else throw HttpError(404, `Contact with id=${id} not found`);
+  } else throw HttpError(404, `Contact with id=${id} not found`);
 };
