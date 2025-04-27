@@ -20,7 +20,9 @@ app.use((err, req, res, next) => {
   const { status = 500, message = "Server error" } = err;
   res.status(status).json({ message });
 });
+const { PORT = 3000 } = process.env;
+const port = Number(PORT);
 
-app.listen(3000, () => {
-  console.log("Server is running. Use our API on port: 3000");
+app.listen(port, () => {
+  console.log(`Server is running. Use our API on port: ${port}`);
 });
