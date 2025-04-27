@@ -1,2 +1,3 @@
-# goit-node-rest-api
-Node.js Homework 2
+# Node.js Homework 2
+
+Написати REST API для роботи з колекцією контактів. Для роботи з REST API використовуйте Postman.

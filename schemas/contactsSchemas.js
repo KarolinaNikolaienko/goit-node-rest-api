@@ -1,5 +1,20 @@
 import Joi from "joi";
 
-export const createContactSchema = Joi.object({});
+export const createContactSchema = Joi.object({
+  name: Joi.string().min(2).max(50).required(),
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: false } })
+    .required(),
+  phone: Joi.string()
+    .regex(/^[0-9]{9,10}$/)
+    .messages({ "string.pattern.base": `Phone number must have 9-10 digits.` })
+    .required(),
+});
 
-export const updateContactSchema = Joi.object({});
+export const updateContactSchema = Joi.object({
+  name: Joi.string().min(2).max(50),
+  email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: false } }),
+  phone: Joi.string()
+    .regex(/^[0-9]{9,10}$/)
+    .messages({ "string.pattern.base": `Phone number must have 9-10 digits.` }),
+});
