@@ -44,12 +44,12 @@ export async function addContact(name, email, phone) {
   return new_contact;
 }
 
-export async function changeContact(contactId, name, email, phone) {
+export async function changeContact(contactId, fields) {
   let data = await listContacts();
   const index = data.findIndex((contact) => contact.id === contactId);
   if (index === -1) return null;
 
-  data[index] = { ...data[index], ...{ name, email, phone } };
+  data[index] = { ...data[index], ...fields };
   fs.writeFile(contactsPath, JSON.stringify(data), function (err) {
     if (err) throw err;
   });

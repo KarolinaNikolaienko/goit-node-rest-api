@@ -54,8 +54,7 @@ export const createContact = async (req, res) => {
 
 export const updateContact = async (req, res) => {
   const { id } = req.params;
-  const { name, email, phone } = req.body;
-  const updated_contact = await changeContact(id, name, email, phone);
+  const updated_contact = await changeContact(id, req.body);
   if (updated_contact) {
     res.json({
       status: "success",
