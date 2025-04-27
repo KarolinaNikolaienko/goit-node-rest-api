@@ -7,24 +7,26 @@ import {
   updateContact,
   updateStatusContact,
 } from "../controllers/contactsControllers.js";
-import isEmptyBody from "../helpers/isEmptyBody.js";
-import validateBody from "../helpers/validateBody.js";
+import isEmptyBody from "../middleware/isEmptyBody.js";
+import validateBody from "../middleware/validateBody.js";
 import {
   createContactSchema,
   updateContactSchema,
   updateStatusContactSchema,
 } from "../schemas/contactsSchemas.js";
+import auth from "../middleware/authorization.js";
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", getAllContacts);
+contactsRouter.get("/", auth, getAllContacts);
 
-contactsRouter.get("/:id", getOneContact);
+contactsRouter.get("/:id", auth, getOneContact);
 
-contactsRouter.delete("/:id", deleteContact);
+contactsRouter.delete("/:id", auth, deleteContact);
 
 contactsRouter.post(
   "/",
+  auth,
   isEmptyBody,
   validateBody(createContactSchema),
   createContact
@@ -32,12 +34,14 @@ contactsRouter.post(
 
 contactsRouter.put(
   "/:id",
+  auth,
   isEmptyBody,
   validateBody(updateContactSchema),
   updateContact
 );
 contactsRouter.patch(
   "/:id/favorite",
+  auth,
   isEmptyBody,
   validateBody(updateStatusContactSchema),
   updateStatusContact

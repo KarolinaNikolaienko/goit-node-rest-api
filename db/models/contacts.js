@@ -14,6 +14,10 @@ const Contact = sequelize.define("contact", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  owner: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
   favorite: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
