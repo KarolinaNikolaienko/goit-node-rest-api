@@ -5,12 +5,14 @@ import {
   deleteContact,
   createContact,
   updateContact,
+  updateStatusContact,
 } from "../controllers/contactsControllers.js";
 import isEmptyBody from "../helpers/isEmptyBody.js";
 import validateBody from "../helpers/validateBody.js";
 import {
   createContactSchema,
   updateContactSchema,
+  updateStatusContactSchema,
 } from "../schemas/contactsSchemas.js";
 
 const contactsRouter = express.Router();
@@ -33,6 +35,12 @@ contactsRouter.put(
   isEmptyBody,
   validateBody(updateContactSchema),
   updateContact
+);
+contactsRouter.patch(
+  "/:id/favorite",
+  isEmptyBody,
+  validateBody(updateStatusContactSchema),
+  updateStatusContact
 );
 
 export default contactsRouter;

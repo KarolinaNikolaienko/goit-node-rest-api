@@ -47,12 +47,25 @@ export const deleteContact = async (req, res) => {
 };
 
 export const createContact = async (req, res) => {
-  const { name, email, phone } = req.body;
-  const new_contact = await addContact(name, email, phone);
+  const new_contact = await addContact(req.body);
   res.status(201).json(new_contact);
 };
 
 export const updateContact = async (req, res) => {
+  const { id } = req.params;
+  const updated_contact = await changeContact(id, req.body);
+  if (updated_contact) {
+    res.json({
+      status: "success",
+      code: 200,
+      data: {
+        updated_contact,
+      },
+    });
+  } else throw HttpError(404, `Contact with id=${id} not found`);
+};
+
+export const updateStatusContact = async (req, res) => {
   const { id } = req.params;
   const updated_contact = await changeContact(id, req.body);
   if (updated_contact) {
