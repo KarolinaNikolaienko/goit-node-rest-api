@@ -21,7 +21,7 @@ export const logOutUser = async (req, res) => {
   // console.log("controller", id);
   await logoutUser(id);
 
-  res.status(204).json("No Content");
+  res.status(204).json();
 };
 
 export const getCurrentUser = (req, res) => {

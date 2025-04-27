@@ -8,7 +8,8 @@ import {
 import HttpError from "../helpers/HttpError.js";
 
 export const getAllContacts = async (req, res) => {
-  const contacts = await listContacts();
+  const { id } = req.user;
+  const contacts = await listContacts(id);
   res.json({
     status: "success",
     code: 200,
@@ -47,7 +48,8 @@ export const deleteContact = async (req, res) => {
 };
 
 export const createContact = async (req, res) => {
-  const new_contact = await addContact(req.body);
+  const { id } = req.user;
+  const new_contact = await addContact(req.body, id);
   res.status(201).json(new_contact);
 };
 

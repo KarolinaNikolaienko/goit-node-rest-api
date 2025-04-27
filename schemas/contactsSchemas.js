@@ -9,7 +9,6 @@ export const createContactSchema = Joi.object({
     .regex(/^[0-9]{9,10}$/)
     .messages({ "string.pattern.base": `Phone number must have 9-10 digits.` })
     .required(),
-  owner: Joi.number().integer().required(),
 });
 
 export const updateContactSchema = Joi.object({
