@@ -2,6 +2,7 @@ import {
   registerUser,
   loginUser,
   logoutUser,
+  changeUserAvatar,
 } from "../services/userServices.js";
 
 export const createUser = async (req, res) => {
@@ -31,4 +32,11 @@ export const getCurrentUser = (req, res) => {
     email,
     subscription,
   });
+};
+
+export const changeAvatar = async (req, res) => {
+  const { id } = req.user;
+  const { avatarURL } = req.body;
+  const user = await changeUserAvatar(id, avatarURL);
+  res.status(200).json(user);
 };

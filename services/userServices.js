@@ -2,20 +2,29 @@ import User from "../db/models/users.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import HttpError from "../helpers/HttpError.js";
+import { createHash } from "crypto";
 
 const { JWT_SECRET } = process.env;
 
+function generateAvatarUrl(emailAddress, options = {}) {
+  const defaultImage = options.defaultImage || "identicon";
+  const emailHash = createHash("md5").update(emailAddress).digest("hex");
+  return `https://www.gravatar.com/avatar/${emailHash}?d=${defaultImage}`;
+}
+
 export const registerUser = async (body) => {
   const { email, password } = body;
+  let { avatarURL } = body;
+  if (!avatarURL) avatarURL = generateAvatarUrl(email);
   const user = await User.findOne({
     where: {
       email,
     },
   });
-  console.log(user);
+  // console.log(user);
   if (user) throw HttpError(409, "Email in use");
   const hashpass = await bcrypt.hash(password, 10);
-  return User.create({ ...body, password: hashpass });
+  return User.create({ ...body, password: hashpass, avatarURL });
 };
 
 export const loginUser = async (body) => {
@@ -67,4 +76,17 @@ export const logoutUser = async (id) => {
 
   await user.update({ token: null });
   // return user;
+};
+
+export const changeUserAvatar = async (id, avatarURL) => {
+  const user = await User.findOne({
+    where: {
+      id,
+    },
+  });
+  if (!user || !user.token) {
+    throw HttpError(401, "Not authorized");
+  }
+  await user.update({ avatarURL });
+  return user;
 };
