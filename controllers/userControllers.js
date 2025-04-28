@@ -3,6 +3,8 @@ import {
   loginUser,
   logoutUser,
   changeUserAvatar,
+  verifyEmail,
+  resendVerifyEmail,
 } from "../services/userServices.js";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -14,6 +16,18 @@ export const createUser = async (req, res) => {
   res.status(201).json({
     user: { email: new_user.email, subscription: new_user.subscription },
   });
+};
+
+export const verifyEmailController = async (req, res) => {
+  const { verificationToken } = req.params;
+  await verifyEmail(verificationToken);
+  res.status(200).json({ message: "Verification successful" });
+};
+
+export const resendVerifyEmailController = async (req, res) => {
+  const { email } = req.body;
+  await resendVerifyEmail(email);
+  res.status(200).json({ message: "Verification email sent" });
 };
 
 export const signInUser = async (req, res) => {
