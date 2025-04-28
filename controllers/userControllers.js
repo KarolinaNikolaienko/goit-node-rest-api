@@ -4,6 +4,10 @@ import {
   logoutUser,
   changeUserAvatar,
 } from "../services/userServices.js";
+import fs from "node:fs/promises";
+import path from "node:path";
+
+const avatarsDir = path.resolve("public", "avatars");
 
 export const createUser = async (req, res) => {
   const new_user = await registerUser(req.body);
@@ -36,7 +40,13 @@ export const getCurrentUser = (req, res) => {
 
 export const changeAvatar = async (req, res) => {
   const { id } = req.user;
-  const { avatarURL } = req.body;
-  const user = await changeUserAvatar(id, avatarURL);
-  res.status(200).json(user);
+  let avatar = null;
+  if (req.file) {
+    const { path: oldPath, filename } = req.file;
+    const newPath = path.join(avatarsDir, filename);
+    await fs.rename(oldPath, newPath);
+    avatar = path.join("avatars", filename);
+  }
+  const user = await changeUserAvatar(id, avatar);
+  res.status(200).json({ avatarURL: user.avatarURL });
 };
