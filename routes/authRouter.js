@@ -1,30 +1,35 @@
 import express from "express";
 import isEmptyBody from "../middleware/isEmptyBody.js";
 import validateBody from "../middleware/validateBody.js";
+import upload from "../middleware/fileUpload.js";
 import { authUserSchema } from "../schemas/userSchemas.js";
 import {
   createUser,
   signInUser,
   logOutUser,
   getCurrentUser,
+  changeAvatar,
 } from "../controllers/userControllers.js";
 import auth from "../middleware/authorization.js";
 
-const authsRouter = express.Router();
+const authRouter = express.Router();
 
-authsRouter.post(
+authRouter.post(
   "/register",
+  upload.single("avatar"),
   isEmptyBody,
   validateBody(authUserSchema),
   createUser
 );
-authsRouter.post(
+authRouter.post(
   "/login",
   isEmptyBody,
   validateBody(authUserSchema),
   signInUser
 );
-authsRouter.post("/logout", auth, logOutUser);
-authsRouter.get("/current", auth, getCurrentUser);
+authRouter.post("/logout", auth, logOutUser);
+authRouter.get("/current", auth, getCurrentUser);
 
-export default authsRouter;
+authRouter.patch("/avatars", auth, upload.single("avatar"), changeAvatar);
+
+export default authRouter;
