@@ -23,7 +23,6 @@ export const signInUser = async (req, res) => {
 
 export const logOutUser = async (req, res) => {
   const { id } = req.user;
-  // console.log("controller", id);
   await logoutUser(id);
 
   res.status(204).json();

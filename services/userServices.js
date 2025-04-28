@@ -2,15 +2,9 @@ import User from "../db/models/users.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import HttpError from "../helpers/HttpError.js";
-import { createHash } from "crypto";
+import generateAvatarUrl from "../helpers/avatarGenerator.js";
 
 const { JWT_SECRET } = process.env;
-
-function generateAvatarUrl(emailAddress, options = {}) {
-  const defaultImage = options.defaultImage || "identicon";
-  const emailHash = createHash("md5").update(emailAddress).digest("hex");
-  return `https://www.gravatar.com/avatar/${emailHash}?d=${defaultImage}`;
-}
 
 export const registerUser = async (body) => {
   const { email, password } = body;
@@ -21,7 +15,6 @@ export const registerUser = async (body) => {
       email,
     },
   });
-  // console.log(user);
   if (user) throw HttpError(409, "Email in use");
   const hashpass = await bcrypt.hash(password, 10);
   return User.create({ ...body, password: hashpass, avatarURL });
@@ -69,13 +62,11 @@ export const logoutUser = async (id) => {
       id,
     },
   });
-  // console.log("service", user);
   if (!user || !user.token) {
     throw HttpError(401, "Not authorized");
   }
 
   await user.update({ token: null });
-  // return user;
 };
 
 export const changeUserAvatar = async (id, avatarURL) => {
