@@ -6,12 +6,15 @@ export const listContacts = async (id) =>
 
 export const getContactById = async (contactId) => Contact.findByPk(contactId);
 
-export const removeContact = async (contactId) =>
-  Contact.destroy({
+export const removeContact = async (contactId) => {
+  const contact = await Contact.findByPk(contactId);
+  contact.destroy({
     where: {
       id: contactId,
     },
   });
+  return contact;
+};
 
 export const addContact = async (body, userId) =>
   Contact.create({ id: nanoid(), ...body, owner: userId });
